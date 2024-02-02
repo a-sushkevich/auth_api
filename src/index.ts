@@ -1,15 +1,24 @@
-import express, { Express, Request, Response } from "express";
 import dotenv from "dotenv";
+import checkEnvVars from "./utils/checkEnvVars";
+import app from "./app";
+import initDb from "./db";
 
 dotenv.config();
 
-const app: Express = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT;
 
-app.get("/", (req: Request, res: Response) => {
-  res.send("Express + TypeScript Server");
-});
+const start = async () => {
+  console.log("Starting up........");
 
-app.listen(port, () => {
-  console.log(`[server]: Server is running at http://localhost:${port}`);
-});
+  console.log("Checking env vars........");
+  checkEnvVars();
+
+  console.log("Initializing MongoDb........");
+  await initDb();
+
+  app.listen(port, () => {
+    console.log(`[server]: Server is running at http://localhost:${port}`);
+  });
+};
+
+start();
